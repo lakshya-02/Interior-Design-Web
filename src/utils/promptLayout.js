@@ -2,6 +2,7 @@ import { roomPalette } from './layoutFallback.js';
 
 const TARGET_WIDTH = 780;
 const TARGET_HEIGHT = 500;
+const VIEW_PADDING = 14;
 
 export function generatedRoomsToLayout(generatedRooms) {
   const validRooms = (generatedRooms || [])
@@ -23,8 +24,8 @@ export function generatedRoomsToLayout(generatedRooms) {
   const spanX = Math.max(maxX - minX, 1);
   const spanY = Math.max(maxY - minY, 1);
   const scale = Math.min(TARGET_WIDTH / spanX, TARGET_HEIGHT / spanY);
-  const offsetX = 24;
-  const offsetY = 24;
+  const offsetX = VIEW_PADDING;
+  const offsetY = VIEW_PADDING;
 
   return validRooms.map((room, index) => ({
     id: room.id || `prompt-${index + 1}-${room.label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,

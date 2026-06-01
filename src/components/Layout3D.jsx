@@ -293,8 +293,8 @@ export default function Layout3D({ rooms, styleState }) {
   }, [rooms, styleState]);
 
   return (
-    <div className="three-mount three-mount--rooms" ref={mountRef}>
-      {renderError && <div className="three-error">{renderError}</div>}
+    <div style={{ width: '100%', height: '100%' }} ref={mountRef}>
+      {renderError && <div style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', background: 'rgba(15,23,42,0.9)', color: '#fca5a5' }}>{renderError}</div>}
     </div>
   );
 }

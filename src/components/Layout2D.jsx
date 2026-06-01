@@ -2,45 +2,46 @@ import { layoutBounds, roomArea } from '../utils/roomExtraction.js';
 
 export default function Layout2D({ rooms, active }) {
   const bounds = layoutBounds(rooms);
+  const totalArea = rooms.reduce((sum, room) => sum + roomArea(room), 0);
 
   return (
-    <section className="panel layout-panel">
-      <div className="section-heading">
+    <section className="glass-card fade-in" style={{ animationDelay: '0.1s' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem' }}>
         <div>
-          <p className="eyebrow">2D architectural plan</p>
+          <span className="badge" style={{ marginBottom: '0.5rem' }}>2D Blueprint Rendering</span>
           <h2>Generated Layout</h2>
+        </div>
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <span className="badge badge-primary">{rooms.length} Detected rooms</span>
+          <span className="badge badge-accent">{totalArea} sq ft</span>
+          <span className="badge">Linear strategy</span>
         </div>
       </div>
 
-      <div className={`layout-board ${active ? 'layout-board--active' : ''}`}>
-        <svg viewBox={`0 0 ${bounds.width} ${bounds.height}`} role="img" aria-label="Detected floor plan layout">
-          <defs>
-            <pattern id="layout-grid" width="18" height="18" patternUnits="userSpaceOnUse">
-              <path d="M18 0H0V18" fill="none" stroke="rgba(148, 163, 184, 0.18)" strokeWidth="1" />
-            </pattern>
-          </defs>
-          <rect width={bounds.width} height={bounds.height} fill="url(#layout-grid)" />
+      <div className={`plan-container blueprint-bg ${active ? 'active' : ''}`}>
+        <svg className="plan-svg" viewBox={`0 0 ${bounds.width} ${bounds.height}`} preserveAspectRatio="xMidYMid meet">
           {rooms.length === 0 && (
-            <text x={bounds.width / 2} y={bounds.height / 2} textAnchor="middle" className="empty-layout-text">
+            <text x="50%" y="50%" dominantBaseline="middle" textAnchor="middle" fill="var(--text-muted)" fontSize="1.25rem" fontWeight="600">
               Generate a prompt layout to fill this plan
             </text>
           )}
           {rooms.map((room) => (
-            <g key={room.id}>
+            <g key={room.id} className="room-group">
               <rect
+                className="room-rect"
                 x={room.x}
                 y={room.y}
                 width={room.width}
                 height={room.height}
-                rx="3"
-                fill={`${room.color}2f`}
+                rx="2"
+                fill={`${room.color}2A`}
                 stroke={room.color}
-                strokeWidth="4"
+                strokeWidth="2"
               />
-              <text x={room.x + 12} y={room.y + 27} className="room-label">
+              <text x={room.x + 8} y={room.y + 20} className="plan-text" fontSize="14">
                 {room.label}
               </text>
-              <text x={room.x + 12} y={room.y + 51} className="room-area">
+              <text x={room.x + 8} y={room.y + 36} className="plan-area-text">
                 {roomArea(room)} sq ft
               </text>
             </g>
@@ -48,12 +49,12 @@ export default function Layout2D({ rooms, active }) {
         </svg>
       </div>
 
-      <div className="room-list">
+      <div className="room-legend">
         {rooms.map((room) => (
-          <div className="room-chip" key={room.id}>
-            <span style={{ background: room.color }} />
-            <strong>{room.label}</strong>
-            <em>{roomArea(room)} sq ft</em>
+          <div className="legend-item" key={room.id}>
+            <div className="legend-color" style={{ backgroundColor: room.color }}></div>
+            <span style={{ color: 'var(--text-main)', fontWeight: '500' }}>{room.label}</span>
+            <span style={{ color: 'var(--text-muted)' }}>({roomArea(room)} sq ft)</span>
           </div>
         ))}
       </div>
